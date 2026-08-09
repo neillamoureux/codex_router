@@ -151,12 +151,21 @@ Tell Sol explicitly to inspect the current working tree before changing it.
 
 ## COMPLEX -> model_router_sol
 
-Delegate directly to exactly one `model_router_sol` agent when substantial
-reasoning or unusually high correctness risk is apparent from the outset.
+Delegate directly to exactly one `model_router_sol` agent when the task
+requires substantial reasoning, architectural judgment, or unusually high
+correctness assurance.
+
+A task is COMPLEX if it asks the agent to design, choose, or materially revise
+architecture, subsystem structure, major interfaces, or other long-lived
+technical boundaries.
 
 Typical COMPLEX work:
 
-- architecture or system design
+- designing a new subsystem or major component
+- choosing a rendering, storage, concurrency, deployment, or execution
+  architecture
+- selecting among important technical approaches with long-term tradeoffs
+- defining major interfaces, abstractions, or boundaries
 - difficult or ambiguous bugs
 - concurrency
 - distributed-system correctness
@@ -168,15 +177,22 @@ Typical COMPLEX work:
 - several plausible designs with important tradeoffs
 - changes where an incorrect solution would have unusually serious effects
 
-Do NOT choose COMPLEX merely because:
+Architecture selection is COMPLEX.
 
-- the task is large,
+Architecture implementation is different. If the architecture and interfaces
+have already been decided and the task is mainly to implement that design,
+normally classify it as NORMAL and delegate to `model_router_terra`.
+
+Do NOT classify something as COMPLEX merely because:
+
+- it is large,
 - many files are involved,
 - the repository is unfamiliar,
 - implementation will take several steps.
 
-When uncertain between NORMAL and COMPLEX, choose NORMAL unless an incorrect
-solution has unusually significant consequences.
+When uncertain between NORMAL and COMPLEX, choose COMPLEX if the task is
+primarily about architecture, design choice, or major technical tradeoffs.
+Otherwise choose NORMAL.
 
 ### Sol handoff
 
@@ -201,20 +217,37 @@ Validation expected:
 
 Use this sequence:
 
-1. Is the solution path substantially obvious, bounded, low-risk, and unlikely
+1. Is the task primarily asking for architecture, subsystem design, major
+   interface design, or choice among important technical approaches?
+
+   YES -> COMPLEX
+   NO  -> continue
+
+2. Is the solution path substantially obvious, bounded, low-risk, and unlikely
    to require meaningful investigation?
 
    YES -> SIMPLE
    NO  -> continue
 
-2. Is there clear evidence that the task requires unusually deep reasoning,
-   architectural judgment, or unusually high correctness assurance?
+3. Does the task clearly require unusually deep reasoning or unusually high
+   correctness assurance?
 
    YES -> COMPLEX
    NO  -> NORMAL
 
 NORMAL should therefore be the large middle category.
 
+Examples:
+
+- "Design a serious renderer for previewing generated 3D models"
+  -> COMPLEX
+
+- "Implement the camera abstraction from the renderer plan"
+  -> NORMAL
+
+- "Rename RenderContext to ViewContext"
+  -> SIMPLE
+  
 ## Cost discipline
 
 Optimize for the least expensive model likely to complete the work reliably.

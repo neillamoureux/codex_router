@@ -57,6 +57,10 @@ substantially deeper reasoning or unusually high correctness assurance.
 
 Examples:
 
+- the task is primarily architecture or subsystem design rather than
+  implementation,
+- the task requires choosing among consequential long-term technical
+  approaches,
 - root cause remains genuinely ambiguous after reasonable investigation
 - consequential architectural choices have important competing tradeoffs
 - subtle concurrency or distributed-system correctness is involved
