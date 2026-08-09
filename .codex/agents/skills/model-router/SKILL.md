@@ -78,6 +78,11 @@ Do not let Luna repeatedly struggle with a task that has proved NORMAL.
 
 NORMAL is the default classification for substantive software engineering.
 
+Spawn ONE AND ONLY ONE `model_router_terra` agent.
+
+After spawning it, do not spawn another worker for this request.
+Wait for that worker's result.
+
 Delegate NORMAL tasks to exactly one `model_router_terra` agent.
 
 Typical NORMAL work:
@@ -150,6 +155,11 @@ Open questions:
 Tell Sol explicitly to inspect the current working tree before changing it.
 
 ## COMPLEX -> model_router_sol
+
+Spawn ONE AND ONLY ONE `model_router_sol` agent.
+
+After spawning it, do not spawn another worker for this request.
+Wait for that worker's result.
 
 Delegate directly to exactly one `model_router_sol` agent when the task
 requires substantial reasoning, architectural judgment, or unusually high
@@ -247,7 +257,39 @@ Examples:
 
 - "Rename RenderContext to ViewContext"
   -> SIMPLE
-  
+
+## Single-worker invariant
+
+Model routing selects an execution tier, not a team of agents.
+
+For each user request, spawn at most ONE model-router worker at a time.
+
+- SIMPLE: spawn no worker; perform the work in the primary session.
+- NORMAL: spawn exactly one `model_router_terra` worker.
+- COMPLEX: spawn exactly one `model_router_sol` worker.
+
+Do NOT spawn multiple workers for:
+- alternative solutions,
+- parallel investigation,
+- architecture comparison,
+- independent review,
+- brainstorming,
+- increased confidence,
+- faster execution.
+
+A COMPLEX classification means "use the complex worker", not "use multiple
+complex workers".
+
+Only spawn another worker when:
+1. the current worker has finished, AND
+2. an explicit escalation from NORMAL to COMPLEX is required.
+
+Even during escalation, there must be only one active model-router
+implementation worker.
+
+Do not use Codex's general multi-agent parallelism as part of this routing
+skill.
+
 ## Cost discipline
 
 Optimize for the least expensive model likely to complete the work reliably.
