@@ -35,6 +35,136 @@ Then follow the corresponding instructions below.
 Do not spend substantial tokens investigating merely to make the routing
 decision.
 
+## Terminology
+
+A TURN is one user message.
+
+A TASK is the continuing engineering objective being worked on across one or
+more turns.
+
+A WORKER is a subagent assigned to a task.
+
+Routing is TASK-scoped, not TURN-scoped.
+
+## Single-worker invariant
+
+Model routing selects an execution tier, not a team of agents.
+
+For each user request, spawn at most ONE model-router worker at a time.
+
+- SIMPLE: spawn no worker; perform the work in the primary session.
+- NORMAL: spawn exactly one `model_router_terra` worker.
+- COMPLEX: spawn exactly one `model_router_sol` worker.
+
+Do NOT spawn multiple workers for:
+- alternative solutions,
+- parallel investigation,
+- architecture comparison,
+- independent review,
+- brainstorming,
+- increased confidence,
+- faster execution.
+
+A COMPLEX classification means "use the complex worker", not "use multiple
+complex workers".
+
+Only spawn another worker when:
+1. the current worker has finished, AND
+2. an explicit escalation from NORMAL to COMPLEX is required.
+
+Even during escalation, there must be only one active model-router
+implementation worker.
+
+Do not use Codex's general multi-agent parallelism as part of this routing
+skill.
+
+## Worker continuity invariant
+
+A model-router worker belongs to the current engineering TASK, not to a
+single user message or turn.
+
+Before spawning any worker, determine whether an existing model-router worker
+already owns the current task.
+
+If an existing worker owns the current task:
+
+1. Do NOT spawn another worker at the same routing level.
+2. Route the user's follow-up instruction to that existing worker thread.
+3. Continue using that worker until:
+   - the task is complete,
+   - the user starts a materially different task, or
+   - the worker explicitly requests escalation.
+
+A follow-up question, clarification, changed requirement, requested adjustment,
+test failure, or request to continue DOES NOT by itself create a new task.
+
+Examples that remain the same task:
+
+- "Now add tests for that."
+- "Actually make that configurable."
+- "That failed on macOS; fix it."
+- "Use a different interface for the camera."
+- "Continue with the implementation."
+- "What about offscreen rendering?"
+- "I don't like that API; revise it."
+
+Do not spawn a second NORMAL worker while a NORMAL worker already owns the
+task.
+
+Do not spawn a second COMPLEX worker while a COMPLEX worker already owns the
+task.
+
+## Before spawning
+
+Before calling the subagent-spawn tool:
+
+1. Check whether a model-router worker already exists for the current task.
+2. If one exists at the required level, send the new instruction to that
+   worker instead of spawning another one.
+3. Spawn a new worker only when no existing worker owns the current task.
+
+## Reclassification replaces the task owner
+
+A task has at most one active implementation owner.
+
+If the task is reclassified to a different routing level:
+
+1. Stop using the current implementation owner for new work.
+2. Preserve all useful findings, changes, validation results, and unresolved
+   questions from the current owner.
+3. Transfer that context to the worker for the new routing level.
+4. The new worker becomes the sole implementation owner for the task.
+5. Route subsequent follow-up instructions for that task to the new owner.
+6. Do not keep workers from different routing levels independently working on
+   the same task.
+
+Examples:
+
+- SIMPLE -> NORMAL:
+  Stop substantial implementation in the primary Luna session and delegate
+  the remaining task to the NORMAL worker.
+
+- SIMPLE -> COMPLEX:
+  Stop substantial implementation in the primary Luna session and delegate
+  the remaining task directly to the COMPLEX worker.
+
+- NORMAL -> COMPLEX:
+  Stop using the NORMAL worker for new work and hand its findings and current
+  working-tree state to the COMPLEX worker.
+
+A routing-level change is a transfer of ownership, not an additional worker.
+
+## Avoid unnecessary downward reclassification
+
+Do not switch from a more capable active worker to a cheaper worker merely
+because the remaining steps have become easier.
+
+Once a NORMAL or COMPLEX worker owns a task, normally let that worker finish
+unless there is a meaningful reason to transfer ownership.
+
+Routing is primarily intended to escalate capability when necessary, not to
+continuously optimize every individual step within an active task.
+
 ## SIMPLE -> primary Luna
 
 Handle SIMPLE tasks directly in the current primary session.
@@ -257,38 +387,6 @@ Examples:
 
 - "Rename RenderContext to ViewContext"
   -> SIMPLE
-
-## Single-worker invariant
-
-Model routing selects an execution tier, not a team of agents.
-
-For each user request, spawn at most ONE model-router worker at a time.
-
-- SIMPLE: spawn no worker; perform the work in the primary session.
-- NORMAL: spawn exactly one `model_router_terra` worker.
-- COMPLEX: spawn exactly one `model_router_sol` worker.
-
-Do NOT spawn multiple workers for:
-- alternative solutions,
-- parallel investigation,
-- architecture comparison,
-- independent review,
-- brainstorming,
-- increased confidence,
-- faster execution.
-
-A COMPLEX classification means "use the complex worker", not "use multiple
-complex workers".
-
-Only spawn another worker when:
-1. the current worker has finished, AND
-2. an explicit escalation from NORMAL to COMPLEX is required.
-
-Even during escalation, there must be only one active model-router
-implementation worker.
-
-Do not use Codex's general multi-agent parallelism as part of this routing
-skill.
 
 ## Cost discipline
 
