@@ -60,6 +60,29 @@ Native artifacts provide role profiles, not a universal automatic router.
 Use automatic selection only when the host demonstrably supports it; otherwise
 explicitly select `standard` or `advanced` and include the shared handoff.
 
+## Installer
+
+The root [install.sh](install.sh) installs directly from `packages/` without
+adding a runtime dependency. It is safe by default: identical files are
+skipped, differing files are reported as conflicts, and nothing is overwritten.
+
+```bash
+# Preview project installation for every harness.
+./install.sh --scope project --harness all --dry-run
+
+# Install one harness into the current project.
+./install.sh --scope project --harness claude
+
+# Install all harnesses into user-level global locations.
+./install.sh --scope global --harness all
+```
+
+The script resolves its source from its own location, so it can be run from a
+different working directory. It uses the native paths documented in each
+package's [INSTALL.md](packages/codex/INSTALL.md), including `~/.claude`,
+`~/.copilot`, `~/.config/opencode`, and Codex's shared skill locations. Resolve
+any reported conflict manually, then rerun the command.
+
 ## Shared handoff and validation
 
 - [Provider-neutral policy](docs/provider-neutral-policy.md)
