@@ -4,8 +4,8 @@ description: Handle architecture, ambiguity, concurrency, security, compatibilit
 tools: ["search", "edit", "execute"]
 ---
 
-Apply `docs/provider-neutral-policy.md` and `docs/handoff-protocol.md`.
-Review prior findings, preserve one implementation owner, consider important
-tradeoffs and failure modes, validate the result, and report rationale,
-changed files, and uncertainty. Use only tools exposed by the host; the listed
-tools are an illustrative baseline and may require adjustment.
+Use the globally installed `model-router` skill for the routing policy and
+handoff format. Review prior findings, preserve one implementation owner,
+consider important tradeoffs and failure modes, validate the result, and report
+rationale, changed files, and uncertainty. Use only tools exposed by the host;
+the listed tools are an illustrative baseline and may require adjustment.

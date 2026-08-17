@@ -9,3 +9,4 @@ agent persistence vary by Copilot CLI version and account. Verify those
 capabilities locally before enabling automatic routing.
 
 See [PLUGIN.md](PLUGIN.md) for the plugin/skill metadata boundary.
+See [INSTALL.md](INSTALL.md) for user-level installation.

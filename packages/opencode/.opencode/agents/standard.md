@@ -3,8 +3,8 @@ description: Handle conventional software engineering tasks requiring repository
 mode: primary
 ---
 
-Apply `docs/provider-neutral-policy.md` and `docs/handoff-protocol.md`.
-Inspect before editing, remain the sole owner of the task, validate the work,
-and report changed files and uncertainty. The filename identifies the
-`standard` role; adapt optional model/tool fields only when supported by the
-installed OpenCode release.
+Use the globally installed `model-router` skill for the routing policy and
+handoff format. Inspect before editing, remain the sole owner of the task,
+validate the work, and report changed files and uncertainty. The filename
+identifies the `standard` role; adapt optional model/tool fields only when
+supported by the installed OpenCode release.

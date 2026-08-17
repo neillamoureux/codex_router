@@ -16,4 +16,6 @@ contain a classifier, router process, provider SDK, credentials, or pricing
 database.
 
 Start with [capability-matrix.md](capability-matrix.md), then read the host
-package README and INSTALL guide.
+package README and INSTALL guide. The INSTALL guides are written for global
+installation and use an explicit `/path/to/codex_router` source path so they do
+not depend on files in the project where the harness runs.

@@ -1,45 +1,53 @@
-# Install the Native Codex Package
+# Install the Native Codex Package Globally
 
-Run these commands from the root of the project where Codex will run:
+These commands install user-level files without relying on the active project.
+Replace `/path/to/codex_router` with this checkout's absolute path.
 
 ```bash
-mkdir -p .agents/skills/model-router .codex/agents
-cp /path/to/codex_router/packages/codex/.agents/skills/model-router/SKILL.md \
-  .agents/skills/model-router/
-cp /path/to/codex_router/packages/codex/.codex/agents/standard.toml \
-  .codex/agents/
-cp /path/to/codex_router/packages/codex/.codex/agents/advanced.toml \
-  .codex/agents/
+ROUTER_ROOT=/path/to/codex_router
+CODEX_USER_HOME="${CODEX_HOME:-$HOME/.codex}"
+
+# Preferred shared Agent Skills discovery path.
+mkdir -p "$HOME/.agents/skills/model-router"
+cp "$ROUTER_ROOT/packages/global-routing.md" \
+  "$HOME/.agents/skills/model-router/SKILL.md"
+
+# Legacy/current Codex-managed path.
+mkdir -p "$CODEX_USER_HOME/skills/model-router" "$CODEX_USER_HOME/agents"
+cp "$ROUTER_ROOT/packages/global-routing.md" \
+  "$CODEX_USER_HOME/skills/model-router/SKILL.md"
+cp "$ROUTER_ROOT/packages/codex/.codex/agents/standard.toml" \
+  "$CODEX_USER_HOME/agents/router_standard.toml"
+cp "$ROUTER_ROOT/packages/codex/.codex/agents/advanced.toml" \
+  "$CODEX_USER_HOME/agents/router_advanced.toml"
 ```
 
-Replace `/path/to/codex_router` with the local path to this repository. Merge
-the files with project configuration rather than replacing unrelated Codex
-settings.
+Codex officially documents `$CODEX_HOME/skills` (default `~/.codex/skills`)
+for CLI-managed skills and recommends the shared Agent Skills location
+`~/.agents/skills` for cross-harness skills. Global discovery of arbitrary agent
+TOML files under `$CODEX_HOME/agents` is version-dependent; if they are not
+discovered, use the skill's explicit role instructions or a project `.codex`
+agent configuration. This is a host/version caveat.
 
-Configure the mapping as:
+Configure models by editing the copied TOML files:
 
-```text
-primary  -> the configured interactive Codex session
-standard -> the agent copied from standard.toml
-advanced -> the agent copied from advanced.toml
+```toml
+name = "router_standard"
+model = "<standard-model-available-to-you>"
+model_reasoning_effort = "medium"
 ```
 
-Set `name`, `model`, reasoning effort, and instructions in the two TOML files.
-The example profile uses the generic agent names `standard` and `advanced`;
-replace the model IDs with models available in your Codex account.
+Use the analogous `router_advanced` file with the advanced model and effort.
+The primary model is configured in Codex user configuration; this package does
+not require a fixed model ID. Existing Terra/Sol files remain compatible.
 
-Merge the relevant agent settings from the existing
-[config.merge.toml](../../.codex/config.merge.toml) into the local Codex
-configuration. Confirm that the host supports worker messaging and cleanup
-before relying on those lifecycle guarantees.
+The optional Codex plugin metadata is at
+[`.codex-plugin/plugin.json`](.codex-plugin/plugin.json). Use it only through
+Codex's documented plugin flow.
 
-For automatic routing, configure the host/coordinator to select the generic
-role and report it. Otherwise explicitly invoke the standard or advanced agent
-and include the [handoff protocol](../../docs/handoff-protocol.md).
+Restart Codex after installing or changing global skills/agents. Invoke the
+skill explicitly with `$model-router`, or use automatic skill selection. Verify
+with the skills/status UI and a trace such as `ROUTE: NORMAL -> standard`.
 
-## Verify
-
-Start Codex in the target project and confirm that the skill is discovered.
-Submit one simple, one normal, and one complex test prompt. Confirm that the
-session reports `primary`, `standard`, and `advanced` respectively, and that
-the configured models are used.
+Official references: [Codex skills](https://developers.openai.com/codex/skills/)
+and the [Codex skills installer guidance](https://github.com/openai/codex/blob/main/codex-rs/skills/src/assets/samples/skill-installer/SKILL.md).

@@ -1,42 +1,39 @@
-# Install the Native GitHub Copilot CLI Package
+# Install the Native GitHub Copilot CLI Package Globally
 
-Run these commands from the root of the project where GitHub Copilot CLI will
-run:
+These commands install user-level files without relying on the active project.
+Replace `/path/to/codex_router` with this checkout's absolute path.
 
 ```bash
-mkdir -p .github/agents
-cp /path/to/codex_router/packages/copilot/.github/agents/standard.agent.md \
-  .github/agents/
-cp /path/to/codex_router/packages/copilot/.github/agents/advanced.agent.md \
-  .github/agents/
+ROUTER_ROOT=/path/to/codex_router
+mkdir -p "$HOME/.copilot/agents" "$HOME/.copilot/skills/model-router"
+cp "$ROUTER_ROOT/packages/global-routing.md" \
+  "$HOME/.copilot/skills/model-router/SKILL.md"
+cp "$ROUTER_ROOT/packages/copilot/.github/agents/standard.agent.md" \
+  "$HOME/.copilot/agents/standard.agent.md"
+cp "$ROUTER_ROOT/packages/copilot/.github/agents/advanced.agent.md" \
+  "$HOME/.copilot/agents/advanced.agent.md"
 ```
 
-Replace `/path/to/codex_router` with the local path to this repository. These
-files are repository-level Copilot custom agents and should be committed to
-the target project.
+GitHub documents `~/.copilot/agents/` for personal custom agents and
+`~/.copilot/skills/<name>/SKILL.md` for personal skills. Do not install these
+files only under `.github/` when the goal is global availability.
 
-## Configure models and tools
+Configure models by adding a supported `model` field to each agent frontmatter,
+or omit it to inherit the session model. The main Copilot CLI session is
+`primary`; the copied profiles are `standard` and `advanced`.
 
-Open each copied `.agent.md` file and adjust its YAML frontmatter for the
-models and tools available to your Copilot CLI account. Keep the agent IDs
-`standard` and `advanced` unless you also update your invocation commands.
+Restart the CLI after installing or changing agents/skills. Verify discovery
+with `/agent`, then invoke explicitly:
 
-Copilot CLI may require a restart before newly added agents appear.
-
-The main Copilot CLI session is `primary`. Explicitly invoke a custom agent
-with commands such as:
-
-```text
-Use the standard agent for this task.
-Use the advanced agent for this architecture task.
+```bash
+copilot --agent standard --prompt "Classify and handle this engineering task."
+copilot --agent advanced --prompt "Handle this architectural engineering task."
 ```
 
-If your installation supports repository instructions or skills, add the
-shared policy from `docs/provider-neutral-policy.md` using that mechanism. Use
-the shared handoff protocol when continuing work.
+Automatic inference is supported by descriptions, but explicit `--agent` is
+the reliable verification path. This package has no separate plugin manifest;
+use only a Copilot CLI plugin format documented by the installed release.
 
-## Verify
-
-Restart Copilot CLI, run `/agent`, and confirm that `standard` and `advanced`
-are listed. Invoke each once and confirm that the selected agent reports the
-expected role and model.
+Official references: [Copilot CLI custom agents](https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/create-custom-agents-for-cli),
+[custom agent invocation](https://docs.github.com/en/copilot/how-tos/copilot-cli/use-copilot-cli/invoke-custom-agents),
+and the [CLI configuration directory](https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-config-dir-reference).

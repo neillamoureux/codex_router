@@ -1,37 +1,41 @@
-# Install the Native OpenCode Package
+# Install the Native OpenCode Package Globally
 
-Run these commands from the root of the project where OpenCode will run:
+These commands install user-level files without relying on the active project.
+Replace `/path/to/codex_router` with this checkout's absolute path.
 
 ```bash
-mkdir -p .opencode/agents
-cp /path/to/codex_router/packages/opencode/.opencode/agents/standard.md \
-  .opencode/agents/
-cp /path/to/codex_router/packages/opencode/.opencode/agents/advanced.md \
-  .opencode/agents/
+ROUTER_ROOT=/path/to/codex_router
+mkdir -p "$HOME/.config/opencode/agents" \
+  "$HOME/.config/opencode/skills/model-router"
+cp "$ROUTER_ROOT/packages/global-routing.md" \
+  "$HOME/.config/opencode/skills/model-router/SKILL.md"
+cp "$ROUTER_ROOT/packages/opencode/.opencode/agents/standard.md" \
+  "$HOME/.config/opencode/agents/standard.md"
+cp "$ROUTER_ROOT/packages/opencode/.opencode/agents/advanced.md" \
+  "$HOME/.config/opencode/agents/advanced.md"
 ```
 
-Replace `/path/to/codex_router` with the local path to this repository. These
-are project-level OpenCode agents.
+OpenCode documents `~/.config/opencode/agents/` for global agents and
+`~/.config/opencode/skills/<name>/SKILL.md` for global skills. The supplied
+frontmatter uses documented `description` and `mode` fields; adapt it if the
+installed release changes its schema.
 
-## Configure models and permissions
+Use the default OpenCode session as `primary`. Configure each profile with a
+supported `model: provider/model` field, or inherit the host model. The copied
+profiles are `standard` and `advanced`.
 
-Open each copied Markdown file and set its `model`, `permission`, and other
-frontmatter fields according to the OpenCode version and models available in
-your account. Keep the agent IDs `standard` and `advanced` unless you also
-change how they are invoked.
+Restart OpenCode after installing or changing global agents/skills. Verify and
+invoke explicitly with:
 
-Use the default OpenCode session as `primary`. If the local release supports
-agent selection, explicitly select the appropriate role or configure its
-documented agent mapping. Do not add a guessed plugin or config manifest.
-Automatic routing, persistence, transfer, and cleanup must be verified in the
-local host; otherwise use one owner and the shared handoff protocol.
+```bash
+opencode --agent standard
+opencode run --agent advanced "Handle this architectural engineering task."
+```
 
-See [CONFIGURATION.md](CONFIGURATION.md) for the documented-entry-point
-guidance.
+The OpenCode plugin command and config schema are release-dependent. This
+package does not install a plugin or write an unverified global config file.
+Automatic routing, persistence, transfer, and cleanup must be verified locally.
 
-## Verify
-
-Start OpenCode in the target project and use its agent selector or `@` agent
-invocation to confirm that `standard` and `advanced` are available. Invoke
-each once and verify the selected model and permissions before relying on
-automatic delegation.
+Official references: [OpenCode agents](https://opencode.ai/docs/agents/),
+[global configuration](https://opencode.ai/docs/config/),
+[skills](https://opencode.ai/docs/skills), and the [CLI](https://dev.opencode.ai/docs/cli/).

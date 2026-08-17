@@ -1,45 +1,34 @@
-# Install the Native Claude Code Package
+# Install the Native Claude Code Package Globally
 
-Run these commands from the root of the project where Claude Code will run:
+These commands install user-level files without relying on the active project.
+Replace `/path/to/codex_router` with this checkout's absolute path.
 
 ```bash
-mkdir -p .claude/agents
-cp /path/to/codex_router/packages/claude/agents/standard.md .claude/agents/
-cp /path/to/codex_router/packages/claude/agents/advanced.md .claude/agents/
+ROUTER_ROOT=/path/to/codex_router
+mkdir -p "$HOME/.claude/agents" "$HOME/.claude/skills/model-router"
+cp "$ROUTER_ROOT/packages/global-routing.md" \
+  "$HOME/.claude/skills/model-router/SKILL.md"
+cp "$ROUTER_ROOT/packages/claude/agents/standard.md" \
+  "$HOME/.claude/agents/standard.md"
+cp "$ROUTER_ROOT/packages/claude/agents/advanced.md" \
+  "$HOME/.claude/agents/advanced.md"
 ```
 
-Replace `/path/to/codex_router` with the local path to this repository. The
-files in `.claude/agents/` are project-level Claude Code subagents and should
-be committed to the target project.
+Claude Code documents `~/.claude/agents/` as the user-level subagent path and
+`~/.claude/skills/` as the user-level skill path. The package's
+[`.claude-plugin/plugin.json`](.claude-plugin/plugin.json) and `agents/` are an
+alternative plugin installation; use Claude Code's documented plugin flow for
+that path.
 
-## Configure models
+Configure models by adding a supported `model` field to each global agent's
+frontmatter, for example `model: sonnet`, or omit it to inherit the main
+session model. Keep `standard` and `advanced` as the role names. The primary
+model is the normal Claude Code session.
 
-Edit the `model` field in each copied file if you want separate cost tiers:
+Restart Claude Code after installing or changing user-level agents/skills.
+Verify discovery with `/agents`, then invoke `claude --agent standard` or
+`claude --agent advanced`. Automatic description-based delegation is possible,
+but explicit invocation is the reliable verification path.
 
-```yaml
-model: haiku       # standard.md
-model: sonnet      # advanced.md
-```
-
-Use model aliases or full model IDs supported by the Claude Code account. If
-the `model` field is omitted, the subagent inherits the host's model.
-
-## Use the roles
-
-The main Claude Code session is `primary`. Explicitly route work with prompts
-such as:
-
-```text
-Use the standard subagent for this task.
-Use the advanced subagent for this architecture task.
-```
-
-Automatic delegation may work from the descriptions, but verify it locally
-before relying on it for cost control. Follow [handoff-protocol.md](../../docs/handoff-protocol.md)
-when continuing or transferring work.
-
-## Verify
-
-Start a new Claude Code session in the target project and ask it to use each
-role once. Confirm that `standard` and `advanced` appear as available
-subagents and that each reports the intended model.
+Official references: [Claude Code subagents](https://code.claude.com/docs/en/sub-agents)
+and [Claude Code plugins](https://code.claude.com/docs/en/plugins-reference).
