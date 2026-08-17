@@ -61,5 +61,7 @@ configuration, and merge deliberately rather than overwriting them.
 - [Validation matrix](docs/validation-matrix.md)
 - [No-runtime scope](docs/no-runtime-scope.md)
 
-The existing [Codex routing procedure](docs/codex-routing.md) remains valid for
-Codex installations and retains its original Luna/Terra/Sol behavior.
+The existing [Codex routing procedure](docs/codex-routing.md) remains available
+for Codex installations. Its Luna/Terra/Sol mapping is documented there only
+as the repository's default/example profile; the generic roles remain
+`primary`, `standard`, and `advanced`.

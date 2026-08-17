@@ -1,42 +1,59 @@
-# Codex Model Routing
+# Codex Host Routing
 
-This repository uses a model-routing policy to select the appropriate Codex
-execution tier for software-development tasks.
+This document describes the Codex host mapping for the provider-neutral
+`primary`, `standard`, and `advanced` roles. The role names are stable; Codex
+agent names and model IDs are configurable.
 
 ## Routing policy
 
-The primary Codex session runs on Luna with low reasoning effort and acts as
-the routing coordinator.
+The configured Codex interactive session acts as the `primary` coordinator and
+simple-work lane. Configure `standard` and `advanced` with any suitable Codex
+agents in the host configuration.
 
 Tasks are classified as follows:
 
-| Classification | Execution |
+| Classification | Generic role |
 |---|---|
-| SIMPLE | Handle directly in Luna |
-| NORMAL | Delegate to one `model_router_terra` worker |
-| COMPLEX | Delegate to one `model_router_sol` worker |
+| SIMPLE | Handle directly in `primary` |
+| NORMAL | Delegate to one `standard` worker |
+| COMPLEX | Delegate to one `advanced` worker |
 
-The coordinator must report the selected route before substantive work:
+The coordinator should report the selected generic route before substantive
+work:
 
 ```text
-ROUTE: SIMPLE -> LUNA
-ROUTE: NORMAL -> TERRA
-ROUTE: COMPLEX -> SOL
+ROUTE: SIMPLE -> primary
+ROUTE: NORMAL -> standard
+ROUTE: COMPLEX -> advanced
 ```
+
+### Default/example Codex profile
+
+The repository's existing files provide this optional compatibility profile:
+
+```text
+primary  -> gpt-5.6-luna (low effort)
+standard -> model_router_terra -> gpt-5.6-terra (medium effort)
+advanced -> model_router_sol   -> gpt-5.6-sol (high effort)
+```
+
+Users may replace the agent names, model IDs, and effort settings without
+changing the generic policy. See [providers/codex/README.md](../providers/codex/README.md)
+and [providers/codex/INSTALL.md](../providers/codex/INSTALL.md).
 
 ## Worker limits
 
-At most one worker of each role may be active at the same time:
+At most one worker for each generic role may be active at the same time:
 
-- Maximum one `model_router_terra`
-- Maximum one `model_router_sol`
+- Maximum one `standard` worker
+- Maximum one `advanced` worker
 
-One Terra and one Sol worker may run concurrently when they own independent
-tasks.
+One standard and one advanced worker may run concurrently when the configured
+Codex host supports it and they own independent tasks.
 
 The same task must have only one implementation owner. If a task is
-reclassified from NORMAL to COMPLEX, ownership transfers from Terra to Sol;
-both workers must not continue independently on the same task.
+reclassified from NORMAL to COMPLEX, ownership transfers from `standard` to
+`advanced`; both workers must not continue independently on the same task.
 
 ## Worker reuse
 
@@ -64,7 +81,7 @@ toward the configured concurrency limit.
 
 ## Agent definitions
 
-The worker definitions are stored in:
+The default/example worker definitions are stored in:
 
 ```text
 .codex/agents/model_router_terra.toml
@@ -107,7 +124,7 @@ Rename a misspelled local variable and update its test.
 Expected result:
 
 ```text
-ROUTE: SIMPLE -> LUNA
+ROUTE: SIMPLE -> primary
 ```
 
 No worker should be spawned.
@@ -119,10 +136,11 @@ Submit an ordinary implementation or debugging request.
 Expected result:
 
 ```text
-ROUTE: NORMAL -> TERRA
+ROUTE: NORMAL -> standard
 ```
 
-Exactly one `model_router_terra` worker should be created.
+Exactly one configured `standard` worker should be created, or the host should
+report its documented fallback.
 
 Send a follow-up before it finishes:
 
@@ -130,8 +148,8 @@ Send a follow-up before it finishes:
 Continue the same task and add focused tests.
 ```
 
-The follow-up should be sent to the existing Terra worker. A second Terra
-worker should not be created.
+The follow-up should be sent to the existing `standard` worker. A second
+standard worker should not be created.
 
 ### COMPLEX task
 
@@ -141,24 +159,26 @@ ambiguous debugging.
 Expected result:
 
 ```text
-ROUTE: COMPLEX -> SOL
+ROUTE: COMPLEX -> advanced
 ```
 
-Exactly one `model_router_sol` worker should be created.
+Exactly one configured `advanced` worker should be created, or the host should
+report its documented fallback.
 
-Send a follow-up before it finishes. It should reuse the existing Sol worker.
+Send a follow-up before it finishes. It should reuse the existing advanced
+worker.
 
-### Terra and Sol concurrently
+### Standard and advanced concurrently
 
 Start one independent NORMAL task and one independent COMPLEX task before
 either finishes.
 
 Expected result:
 
-- One Terra worker is active.
-- One Sol worker is active.
+- One standard worker is active.
+- One advanced worker is active.
 - Both workers may run concurrently.
-- A second Terra or second Sol worker is not created.
+- A second standard or advanced worker is not created.
 
 ### Cleanup
 
@@ -176,21 +196,21 @@ Expected result:
 A valid trace may look like this:
 
 ```text
-ROUTE: NORMAL -> TERRA
-SPAWNED: model_router_terra <id>
+ROUTE: NORMAL -> standard
+SPAWNED: standard <id>
 
-REUSED: model_router_terra <id>
+REUSED: standard <id>
 
-ROUTE: COMPLEX -> SOL
-SPAWNED: model_router_sol <id>
+ROUTE: COMPLEX -> advanced
+SPAWNED: advanced <id>
 
-CLOSED: model_router_terra <id>
-CLOSED: model_router_sol <id>
+CLOSED: standard <id>
+CLOSED: advanced <id>
 ```
 
 An invalid trace contains two active workers of the same role:
 
 ```text
-SPAWNED: model_router_terra <id-1>
-SPAWNED: model_router_terra <id-2>
+SPAWNED: standard <id-1>
+SPAWNED: standard <id-2>
 ```
