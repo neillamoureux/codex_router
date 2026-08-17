@@ -1,4 +1,3 @@
-```md
 # Codex Model Routing
 
 This repository uses a model-routing policy to select the appropriate Codex
@@ -194,5 +193,4 @@ An invalid trace contains two active workers of the same role:
 ```text
 SPAWNED: model_router_terra <id-1>
 SPAWNED: model_router_terra <id-2>
-```
 ```
