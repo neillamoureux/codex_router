@@ -25,6 +25,12 @@ providers/
 ├── copilot/
 └── opencode/
 
+packages/
+├── codex/                    # native Codex skill and agent templates
+├── claude/                   # .claude/agents profiles
+├── copilot/                  # .github/agents custom-agent profiles
+└── opencode/                 # .opencode/agents profiles
+
 .agents/                     # existing Codex skill
 .codex/                      # existing Codex configuration and agents
 ```
@@ -44,7 +50,16 @@ creating a competing implementation.
 
 ## Install by host
 
-Read the package instructions before copying anything:
+For native host artifacts, start with [packages/README.md](packages/README.md)
+and [packages/capability-matrix.md](packages/capability-matrix.md). Read the
+host package instructions before copying anything:
+
+- [Native Codex](packages/codex/README.md) — [install](packages/codex/INSTALL.md)
+- [Native Claude Code](packages/claude/README.md) — [install](packages/claude/INSTALL.md)
+- [Native Copilot CLI](packages/copilot/README.md) — [install](packages/copilot/INSTALL.md)
+- [Native OpenCode](packages/opencode/README.md) — [install](packages/opencode/INSTALL.md)
+
+The original provider guides remain available for compatibility:
 
 - [Codex](providers/codex/README.md) — [install](providers/codex/INSTALL.md)
 - [Claude](providers/claude/README.md) — [install](providers/claude/INSTALL.md)
@@ -53,6 +68,10 @@ Read the package instructions before copying anything:
 
 Provider packages are additive. Preserve existing project instructions and
 configuration, and merge deliberately rather than overwriting them.
+
+Native artifacts provide role profiles, not a universal automatic router.
+Use automatic selection only when the host demonstrably supports it; otherwise
+explicitly select `standard` or `advanced` and include the shared handoff.
 
 ## Shared handoff and validation
 
