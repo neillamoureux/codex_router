@@ -29,7 +29,7 @@ ROUTE: COMPLEX -> advanced
 
 ### Default/example Codex profile
 
-The repository's existing files provide this optional compatibility profile:
+This repository provides the following optional example profile:
 
 ```text
 primary  -> gpt-5.6-luna (low effort)

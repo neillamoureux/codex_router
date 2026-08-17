@@ -1,17 +1,45 @@
 # Install the Native Claude Code Package
 
-Preferred plugin path: install this package using Claude Code's documented
-plugin installation flow; the manifest is
-[`.claude-plugin/plugin.json`](.claude-plugin/plugin.json) and plugin agents are
-in `agents/`.
+Run these commands from the root of the project where Claude Code will run:
 
-For direct project installation, copy `.claude/agents/standard.md` and
-`advanced.md` into the target project's `.claude/agents/` directory. Preserve
-existing agents and adjust descriptions, tools, permissions, or model settings
-only according to the installed Claude Code version.
+```bash
+mkdir -p .claude/agents
+cp /path/to/codex_router/packages/claude/agents/standard.md .claude/agents/
+cp /path/to/codex_router/packages/claude/agents/advanced.md .claude/agents/
+```
 
-Use the main Claude Code session as `primary`. Automatic routing is not
-assumed: explicitly invoke the named subagent when needed, or configure a host
-workflow that demonstrably selects it. Continue or transfer using
-`docs/handoff-protocol.md`; if the host does not preserve that context, paste
-the handoff into the next session.
+Replace `/path/to/codex_router` with the local path to this repository. The
+files in `.claude/agents/` are project-level Claude Code subagents and should
+be committed to the target project.
+
+## Configure models
+
+Edit the `model` field in each copied file if you want separate cost tiers:
+
+```yaml
+model: haiku       # standard.md
+model: sonnet      # advanced.md
+```
+
+Use model aliases or full model IDs supported by the Claude Code account. If
+the `model` field is omitted, the subagent inherits the host's model.
+
+## Use the roles
+
+The main Claude Code session is `primary`. Explicitly route work with prompts
+such as:
+
+```text
+Use the standard subagent for this task.
+Use the advanced subagent for this architecture task.
+```
+
+Automatic delegation may work from the descriptions, but verify it locally
+before relying on it for cost control. Follow [handoff-protocol.md](../../docs/handoff-protocol.md)
+when continuing or transferring work.
+
+## Verify
+
+Start a new Claude Code session in the target project and ask it to use each
+role once. Confirm that `standard` and `advanced` appear as available
+subagents and that each reports the intended model.

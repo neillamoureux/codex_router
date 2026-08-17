@@ -1,9 +1,8 @@
 # Native Host Packages
 
-`packages/` is the sole harness-integration root. It contains copyable,
-no-runtime integration artifacts for hosts that provide native instruction or
-agent formats. Migration notes for projects using the former `providers/`
-tree are in [compatibility.md](compatibility.md).
+`packages/` is the harness-integration root. It contains copyable, no-runtime
+integration artifacts for hosts that provide native instruction or agent
+formats.
 
 | Host | Native artifacts | Native routing status |
 |---|---|---|

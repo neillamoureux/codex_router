@@ -16,5 +16,5 @@ owner per task and reuse that owner for follow-ups. If it does not, continue in
 one session and disclose the fallback; do not claim unsupported lifecycle
 events.
 
-The repository's existing `.codex` agents are a compatibility/default profile,
-not a requirement of this skill.
+The repository's root `.codex` agents are an optional default profile, not a
+requirement of this skill.

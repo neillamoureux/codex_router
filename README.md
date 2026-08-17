@@ -17,7 +17,7 @@ docs/
 ├── handoff-protocol.md
 ├── validation-matrix.md
 ├── no-runtime-scope.md
-└── codex-routing.md          # existing Codex procedure
+└── codex-routing.md          # Codex host procedure
 
 packages/
 ├── codex/                    # native Codex skill and agent templates
@@ -25,8 +25,8 @@ packages/
 ├── copilot/                  # .github/agents custom-agent profiles
 └── opencode/                 # .opencode/agents profiles
 
-.agents/                     # existing Codex skill
-.codex/                      # existing Codex configuration and agents
+.agents/                     # repository-local Codex skill
+.codex/                      # Codex configuration and agents
 ```
 
 ## Routing policy
@@ -44,9 +44,8 @@ creating a competing implementation.
 
 ## Install by host
 
-Start with [packages/README.md](packages/README.md),
-[packages/capability-matrix.md](packages/capability-matrix.md), and
-[packages/compatibility.md](packages/compatibility.md). Read the host package
+Start with [packages/README.md](packages/README.md) and
+[packages/capability-matrix.md](packages/capability-matrix.md). Read the host package
 instructions before copying anything:
 
 - [Native Codex](packages/codex/README.md) — [install](packages/codex/INSTALL.md)
@@ -54,10 +53,8 @@ instructions before copying anything:
 - [Native Copilot CLI](packages/copilot/README.md) — [install](packages/copilot/INSTALL.md)
 - [Native OpenCode](packages/opencode/README.md) — [install](packages/opencode/INSTALL.md)
 
-Preserve existing project instructions and configuration, and merge
-deliberately rather than overwriting them. Existing installations copied from
-the former `providers/` tree remain compatible; see
-[compatibility.md](packages/compatibility.md).
+Preserve project instructions and configuration, and merge deliberately rather
+than overwriting them.
 
 Native artifacts provide role profiles, not a universal automatic router.
 Use automatic selection only when the host demonstrably supports it; otherwise
@@ -70,7 +67,6 @@ explicitly select `standard` or `advanced` and include the shared handoff.
 - [Validation matrix](docs/validation-matrix.md)
 - [No-runtime scope](docs/no-runtime-scope.md)
 
-The existing [Codex routing procedure](docs/codex-routing.md) remains available
-for Codex installations. Its Luna/Terra/Sol mapping is documented there only
-as the repository's default/example profile; the generic roles remain
-`primary`, `standard`, and `advanced`.
+The [Codex routing procedure](docs/codex-routing.md) documents the Codex host
+mapping. Its Luna/Terra/Sol mapping is an example profile; the generic roles
+remain `primary`, `standard`, and `advanced`.

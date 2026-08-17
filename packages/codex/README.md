@@ -1,8 +1,8 @@
 # Native Codex Package
 
-This is the native Codex package. It preserves the existing repository-local
-`.agents/` skill and `.codex/agents/` TOML approach while mapping the generic
-roles `primary`, `standard`, and `advanced`.
+This is the native Codex package. It uses repository-local `.agents/` skills
+and `.codex/agents/` TOML files while mapping the generic roles `primary`,
+`standard`, and `advanced`.
 
 ## Contents
 
@@ -12,6 +12,5 @@ roles `primary`, `standard`, and `advanced`.
 - `.codex-plugin/plugin.json` and `skills/` — plugin metadata and skill entry point.
 - [INSTALL.md](INSTALL.md) — additive installation and customization steps.
 
-The existing root `.codex` files remain the compatibility/default profile. The
-native package templates use generic agent names and do not require Luna,
-Terra, or Sol.
+The root `.codex` files provide an optional default profile. The native package
+templates use generic agent names and do not require Luna, Terra, or Sol.
