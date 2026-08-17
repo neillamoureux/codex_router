@@ -1,8 +1,9 @@
 # Native Host Packages
 
-`packages/` contains copyable, no-runtime integration artifacts for hosts that
-provide native instruction or agent formats. The older `providers/` packages
-remain supported compatibility guides; they are intentionally not removed.
+`packages/` is the sole harness-integration root. It contains copyable,
+no-runtime integration artifacts for hosts that provide native instruction or
+agent formats. Migration notes for projects using the former `providers/`
+tree are in [compatibility.md](compatibility.md).
 
 | Host | Native artifacts | Native routing status |
 |---|---|---|

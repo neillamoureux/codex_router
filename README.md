@@ -19,12 +19,6 @@ docs/
 ├── no-runtime-scope.md
 └── codex-routing.md          # existing Codex procedure
 
-providers/
-├── codex/                    # preserves the existing Codex integration
-├── claude/
-├── copilot/
-└── opencode/
-
 packages/
 ├── codex/                    # native Codex skill and agent templates
 ├── claude/                   # .claude/agents profiles
@@ -50,24 +44,20 @@ creating a competing implementation.
 
 ## Install by host
 
-For native host artifacts, start with [packages/README.md](packages/README.md)
-and [packages/capability-matrix.md](packages/capability-matrix.md). Read the
-host package instructions before copying anything:
+Start with [packages/README.md](packages/README.md),
+[packages/capability-matrix.md](packages/capability-matrix.md), and
+[packages/compatibility.md](packages/compatibility.md). Read the host package
+instructions before copying anything:
 
 - [Native Codex](packages/codex/README.md) — [install](packages/codex/INSTALL.md)
 - [Native Claude Code](packages/claude/README.md) — [install](packages/claude/INSTALL.md)
 - [Native Copilot CLI](packages/copilot/README.md) — [install](packages/copilot/INSTALL.md)
 - [Native OpenCode](packages/opencode/README.md) — [install](packages/opencode/INSTALL.md)
 
-The original provider guides remain available for compatibility:
-
-- [Codex](providers/codex/README.md) — [install](providers/codex/INSTALL.md)
-- [Claude](providers/claude/README.md) — [install](providers/claude/INSTALL.md)
-- [Copilot](providers/copilot/README.md) — [install](providers/copilot/INSTALL.md)
-- [OpenCode](providers/opencode/README.md) — [install](providers/opencode/INSTALL.md)
-
-Provider packages are additive. Preserve existing project instructions and
-configuration, and merge deliberately rather than overwriting them.
+Preserve existing project instructions and configuration, and merge
+deliberately rather than overwriting them. Existing installations copied from
+the former `providers/` tree remain compatible; see
+[compatibility.md](packages/compatibility.md).
 
 Native artifacts provide role profiles, not a universal automatic router.
 Use automatic selection only when the host demonstrably supports it; otherwise

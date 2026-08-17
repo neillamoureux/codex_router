@@ -6,4 +6,5 @@ OpenCode session is `primary`.
 
 OpenCode configuration and plugin schemas vary by release. No unverified
 `opencode.json` or plugin manifest is included. See [INSTALL.md](INSTALL.md)
-for configuration guidance without inventing a manifest.
+and [CONFIGURATION.md](CONFIGURATION.md) for configuration guidance without
+inventing a manifest.

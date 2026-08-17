@@ -38,8 +38,8 @@ advanced -> model_router_sol   -> gpt-5.6-sol (high effort)
 ```
 
 Users may replace the agent names, model IDs, and effort settings without
-changing the generic policy. See [providers/codex/README.md](../providers/codex/README.md)
-and [providers/codex/INSTALL.md](../providers/codex/INSTALL.md).
+changing the generic policy. See [packages/codex/README.md](../packages/codex/README.md)
+and [packages/codex/INSTALL.md](../packages/codex/INSTALL.md).
 
 ## Worker limits
 

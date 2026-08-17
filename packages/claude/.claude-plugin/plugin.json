@@ -1,0 +1,17 @@
+{
+  "name": "model-router-claude-code",
+  "version": "0.1.0",
+  "description": "Provider-neutral routing profiles for Claude Code.",
+  "author": {
+    "name": "Model Router contributors"
+  },
+  "license": "MIT",
+  "keywords": ["routing", "engineering", "claude-code"],
+  "interface": {
+    "displayName": "Model Router for Claude Code",
+    "shortDescription": "Route engineering tasks by hardness and cost.",
+    "longDescription": "No-runtime Claude Code profiles for primary, standard, and advanced engineering work.",
+    "developerName": "Model Router contributors",
+    "category": "Productivity"
+  }
+}
